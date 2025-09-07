@@ -25,9 +25,9 @@ program
         const sqlArray = decode(data);
 
         if (typeof cmdObj.output === 'string') {
-            await fsp.writeFile(cmdObj.output, JSON.stringify(sqlArray), 'utf8');
+            await fsp.writeFile(cmdObj.output, JSON.stringify(sqlArray, undefined, 4), 'utf8');
         } else {
-            console.log(JSON.stringify(sqlArray));
+            console.log(JSON.stringify(sqlArray, undefined, 4));
         }
     });
 
@@ -43,7 +43,7 @@ program
                         : 0;
 
         const sqlSummary = new Map();
-        for (const item of json) {
+        for (const item of JSON.parse(json)) {
 
             if (item.time < threshold) continue;
 
@@ -63,17 +63,16 @@ program
             }
         }
 
+        let towrite = '';
+        sqlSummary.forEach((value, key, map) => {
+            // console.log(`${key} => `, value);
+            towrite += `
 
-        const towrite = sqlSummary.map(item => {
-            return `
-
-${item.sql}
-${item.total}\t${item.count}\t${item.avg}`});
-        await fsp.writeFile('sql-processed.txt',
-                    towrite.join('\n'),
-                    'utf8'
-        );
-        if (typeof cmdObj.output === string) {
+${value.sql}
+${value.total}\t${value.count}\t${value.avg}`;
+        });
+        // console.log(`towrite ${typeof towrite} ${Array.isArray(towrite)} ${towrite.length}`);
+        if (typeof cmdObj.output === 'string') {
             await fsp.writeFile(cmdObj.output, towrite, 'utf-8');
         } else {
             console.log(towrite);
@@ -83,7 +82,7 @@ ${item.total}\t${item.count}\t${item.avg}`});
 function decode(data) {
     const sqlArray = [];
 
-    for (const reading of readings.split('\n')) {
+    for (const reading of data.split('\n')) {
         const vals = reading.split('\t');
         const item = {
             sql: Base64.decode(vals[0]),

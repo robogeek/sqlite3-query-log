@@ -50,18 +50,21 @@ export default function install(db, logfn, compat) {
 
     const _compat = compat ? compat : "node-sqlite3";
 
-    if (compat === 'node-sqlite3') {
+    if (_compat === 'node-sqlite3') {
+        // console.log(`SQ3QueryLog installing on ${db.name} ${logfn}`);
         db.on('profile', (sql, time) => {
             fs.writeFileSync(logfn,
                 `${Base64.encode(sql)}\t${time}\n`,
                 { flag: "a+" }
             );
         });
-    } else if (compat === 'better-sqlite3') {
+    } else if (_compat === 'better-sqlite3') {
         throw new Error(`better-sqlite3 not supported`);
-    } else if (compat === 'node:sqlite') {
+    } else if (_compat === 'node:sqlite') {
         throw new Error(`node:sqlite not supported`);
-    } else if (compat === 'bun:sqlite') {
+    } else if (_compat === 'bun:sqlite') {
         throw new Error(`bun:sqlite not supported`);
+    } else {
+        throw new Error(`SQ3QueryLog unknown mode ${_compat}`);
     }
 }
