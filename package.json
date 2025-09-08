@@ -1,6 +1,6 @@
 {
   "name": "sqlite3-query-log",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Logging and analyzing query performance in SQLITE3",
   "main": "index.mjs",
   "engines": {
@@ -16,8 +16,12 @@
     "type": "git",
     "url": "git+https://github.com/robogeek/sqlite3-query-log.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "sqlite3",
+    "sqlite3 profiling",
+    "sqlite3 performance"
+  ],
+  "author": "David Herron <david@davidherron.com>",
   "license": "ISC",
   "type": "module",
   "bugs": {

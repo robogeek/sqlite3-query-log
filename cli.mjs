@@ -1,11 +1,4 @@
-
-// Use Commander
-//
-// Commands:
-//
-// - decode - convert the encoded file into decided SQL text, output to CSV, JSON, YAML
-// - analyze - sort by either # of queries, or by query time, threshold for query time
-
+#!/usr/bin/env node
 
 import { program } from 'commander';
 import { Base64 } from 'js-base64';
