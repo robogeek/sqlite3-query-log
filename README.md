@@ -183,3 +183,24 @@ This one is something to look into more carefully.
 # Intention meets reality
 
 The intent was to support this tool against all SQLITE3 drivers for Node.js.  Unfortunately, only the traditional `node-sqlite3` package has the necessary API to retrieve performance traces.  While the intent was to support `better-sqlite3`, `node:sqlite3` and `bun:sqlite3`, none of those drivers have a `db.on('profile')` hook.
+
+## SQLITE3's C API
+
+The API hook used above is clearly associated with a hook in SQLITE3's C API.  That API, documented here https://www.sqlite.org/c3ref/profile.html, is **deprecated** and we are told to instead use `sqlite3_trace_v2` documented at https://www.sqlite.org/c3ref/trace_v2.html
+
+## Examining better-sqlite
+
+It is therefore feasible to create C++ code to call this new SQLITE3 tracing API.  There is a vast amount of C++ code in the `better-sqlite` source.  Surely they could create an appropriate interface to the new tracing API.
+
+The `better-sqlite` documentation does offer this option for the Database constructor:
+
+> * `options.verbose`: provide a function that gets called with every SQL string executed by the database connection (default: `null`).
+
+And, this example code is provided:
+
+```js
+const Database = require('better-sqlite3');
+const db = new Database('foobar.db', { verbose: console.log });
+```
+
+But, the test suite file `43.verbose.js`, which tests this function, does not show it providing anything other than the SQL text.
